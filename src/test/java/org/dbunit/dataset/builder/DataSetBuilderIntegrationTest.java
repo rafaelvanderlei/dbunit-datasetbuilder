@@ -62,6 +62,7 @@ public class DataSetBuilderIntegrationTest {
 
         ReplacementDataSet expected = new ReplacementDataSet(new FlatXmlDataSetBuilder().build(
                 this.getClass().getResourceAsStream("/reference.xml")));
+        expected.addReplacementObject("[EPOCH_TIME]", new Date(0));
         expected.addReplacementObject("[NULL]", null);
 
         Assertion.assertEquals(expected, actual);
