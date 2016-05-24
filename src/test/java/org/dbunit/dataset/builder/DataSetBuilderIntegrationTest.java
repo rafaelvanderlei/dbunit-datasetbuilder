@@ -29,6 +29,7 @@ import java.sql.Date;
 import org.dbunit.Assertion;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ReplacementDataSet;
+import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,6 +65,21 @@ public class DataSetBuilderIntegrationTest {
                 this.getClass().getResourceAsStream("/reference.xml")));
         expected.addReplacementObject("[EPOCH_TIME]", new Date(0));
         expected.addReplacementObject("[NULL]", null);
+
+        Assertion.assertEquals(expected, actual);
+    }
+    
+    @Test
+    public void testBuildCaseSensitive() throws Exception {
+        DataSetBuilder builder = new DataSetBuilder(false);
+        newBasicRow("ADDRESS").with("STREET", "Main Street").with("NUMBER", 42).addTo(builder);
+        newBasicRow("ADDREss").with("STREET", "Main Street 2").with("NUMBER", 43).addTo(builder);
+
+        final IDataSet actual = builder.build();
+
+        FlatXmlDataSet expected = new FlatXmlDataSetBuilder()
+        		.setCaseSensitiveTableNames(true)
+        		.build(this.getClass().getResourceAsStream("/reference_case_sensitive.xml"));
 
         Assertion.assertEquals(expected, actual);
     }

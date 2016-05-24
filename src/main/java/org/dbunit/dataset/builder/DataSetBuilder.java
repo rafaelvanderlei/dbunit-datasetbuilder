@@ -20,6 +20,7 @@
  */
 package org.dbunit.dataset.builder;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,11 +46,17 @@ public class DataSetBuilder implements IDataSetManipulator {
     }
 
     public DataSetBuilder(boolean ignoreCase) throws DataSetException {
-        this(stringPolicy(ignoreCase));
-    }
-
-    public DataSetBuilder(IStringPolicy stringPolicy) throws DataSetException {
-        this.stringPolicy = stringPolicy;
+    	//TODO create an issue in DBUnit so that CachedDataSet has a constructor that receives _caseSensitiveTableNames (without IDataSetConsumer).
+    	Field caseSensitiveField;
+		try {
+			caseSensitiveField = AbstractDataSet.class.getDeclaredField("_caseSensitiveTableNames");
+			caseSensitiveField.setAccessible(true);
+	    	caseSensitiveField.set(this.dataSet, !ignoreCase);
+		} catch (Exception e) {
+			//ignore. It shouldn't happen at runtime, unless there's programming error.
+		}
+    	
+        this.stringPolicy = stringPolicy(ignoreCase);
         consumer.startDataSet();
     }
 
