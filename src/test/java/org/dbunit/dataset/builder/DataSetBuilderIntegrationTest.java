@@ -25,19 +25,16 @@ import static org.dbunit.dataset.builder.DataSetBuilderIntegrationTest.PERSONRow
 import static org.dbunit.dataset.builder.RawDataSetRowBuilder.newRawRow;
 import static org.dbunit.dataset.builder.valuegenerator.ValueGeneratorMaker.newFixedValueGenerator;
 
-import java.io.PrintWriter;
 import java.sql.Date;
 
 import org.dbunit.Assertion;
 import org.dbunit.dataset.CustomTableMetaData;
-import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ReplacementDataSet;
 import org.dbunit.dataset.Row;
 import org.dbunit.dataset.Table;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
-import org.dbunit.dataset.xml.FlatXmlWriter;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -170,13 +167,4 @@ public class DataSetBuilderIntegrationTest {
         	return PERSON_TABLE_META_DATA;
         }
     }
-    
-    public static void main(String[] args) throws DataSetException {
-    	IDataSet dataSet = new DataSetBuilder()
-    			.add( newPERSON().NAME("Bob") )
-    			.add( newPERSON().NAME("Alice").BIRTHPLACE("London") )
-    			.build();
-    	
-    	new FlatXmlWriter(new PrintWriter(System.out)).write(dataSet);
-	}
 }
