@@ -1,6 +1,6 @@
 # DBUnit - Dynamically Creating Data Sets Using Builders
 
-[![Build Status](https://travis-ci.org/marcphilipp/dbunit-datasetbuilder.png)](https://travis-ci.org/marcphilipp/dbunit-datasetbuilder)
+[![Build Status](https://travis-ci.org/rafaelvs/dbunit-datasetbuilder.png)](https://travis-ci.org/rafaelvs/dbunit-datasetbuilder)
 
 ## Motivation
 
