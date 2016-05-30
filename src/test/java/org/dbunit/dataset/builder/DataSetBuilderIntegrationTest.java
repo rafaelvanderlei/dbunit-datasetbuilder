@@ -23,7 +23,7 @@ package org.dbunit.dataset.builder;
 
 import static org.dbunit.dataset.builder.DataSetBuilderIntegrationTest.PERSONRowBuilder.newPERSON;
 import static org.dbunit.dataset.builder.RawDataSetRowBuilder.newRawRow;
-import static org.dbunit.dataset.builder.valuegenerator.ValueGeneratorMaker.newFixedValueGenerator;
+import static org.dbunit.dataset.builder.valuegenerator.ValueGeneratorMaker.*;
 
 import java.sql.Date;
 
@@ -64,7 +64,7 @@ public class DataSetBuilderIntegrationTest {
 			        .addValueGenerator("NAME", newFixedValueGenerator(""))
 			        .addValueGenerator("VERSION", newFixedValueGenerator(0L))
 			        .addValueGenerator("FIRSTNAME", newFixedValueGenerator(""))
-			        .addValueGenerator("ID", newFixedValueGenerator(0L))
+			        .addValueGenerator("ID", newSequenceValueGenerator( 1, 1 ))
 			        .addValueGenerator("SEX", newFixedValueGenerator(null))
 			        .addValueGenerator("BIRTHPLACE", newFixedValueGenerator(""))
         			.add(new Row().add("NAME", "Bob").add("BIRTHPLACE", "NEW YORK"))
@@ -94,7 +94,7 @@ public class DataSetBuilderIntegrationTest {
     public void testBuildCaseSensitive() throws Exception {
     	final IDataSet actual = new DataSetBuilder( true )
         		.add( newRawRow("ADDRESS").with("STREET", "Main Street").with("NUMBER", 42) )
-        		.add( newRawRow("ADDREss").with("STREET", "Main Street 2").with("NUMBER", 43) )
+        		.add( newRawRow("address").with("STREET", "Main Street 2").with("NUMBER", 43) )
         		.build();
 
         FlatXmlDataSet expected = new FlatXmlDataSetBuilder()
@@ -120,7 +120,7 @@ public class DataSetBuilderIntegrationTest {
         
         static {
         	PERSON_TABLE_META_DATA = new TableMetaDataBuilder( TABLE_NAME )
-        			.addValueGenerator( C_ID, newFixedValueGenerator( 0L ) )
+        			.addValueGenerator( C_ID, newSequenceValueGenerator( 1, 1 ) )
         			.addValueGenerator( C_NAME, newFixedValueGenerator("") )
         			.addValueGenerator( C_FIRSTNAME, newFixedValueGenerator("") )
 		        	.addValueGenerator( C_SEX, newFixedValueGenerator( null ) )
