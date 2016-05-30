@@ -33,20 +33,20 @@ While this is incredibly useful, understanding the resulting tests is often hard
 
 After researching and looking through the DBUnit code -- especially `FlatXmlDataSetBuilder` and the classes it uses -- for a while, I figured it possible but there was no nice, readable way to do it, yet. Therefore, I came up with a class called `DataSetBuilder` which is basically a wrapper around a `CachedDataSet` using a `BufferedConsumer`. Let's take a look at an example:
 
-    DataSetBuilder builder = new DataSetBuilder();
+    private static final ColumnSpec<String> NAME = newColumn("NAME");
+    private static final ColumnSpec<Integer> AGE = ColumnSpec.newColumn("AGE");
+    
+    IDataSet dataSet = new DataSetBuilder()
 
     // Using strings as column names, not type-safe
-    builder.newRow("PERSON").with("NAME", "Bob").with("AGE", 18).add();
+    .add( newRawRow("PERSON").with("NAME", "Bob").with("AGE", 18) )
 
-    // Using ColumnSpecs to identify columns, type-safe!
-    ColumnSpec<String> name = ColumnSpec.newColumn("NAME")
-    ColumnSpec<Integer> age = ColumnSpec.newColumn("AGE");
-    builder.newRow("PERSON").with(name, "Alice").with(age, 23).add();
+     // Using ColumnSpecs to identify columns, type-safe!
+    .add( newRawRow("PERSON").with(NAME, "Alice").with(AGE, 23) )
 
     // New columns are added on the fly
-    builder.newRow("PERSON").with(name, "Charlie").with("LAST_NAME", "Brown").add();
-
-    IDataSet dataSet = builder.build();
+    .add( newRawRow("PERSON").with("NAME", "Charlie").with("LAST_NAME", "Brown") )
+    .build();
 
 The code listed above creates three records in the `PERSON` table. It showcases two different ways of specifying columns, one using plain Strings and one using `ColumnSpec` instances, respectively.
 
@@ -69,9 +69,11 @@ The idea to create a data set directly from Java code is great and give new poss
 However the code is still boiler plated. SO the second natural step is to create table specific row builder.
 With them the code can be more compact.
 
-     DataSetBuilder builder = new DataSetBuilder();
-     newPERSON().NAME("Bob").BIRTHPLACE("NEW YORK").addTo(builder);
-     newPERSON().NAME("Alice").BIRTHPLACE("London").addTo(builder);
+    IDataSet dataSet = new DataSetBuilder()
+		.add( newPERSON().NAME("Bob").AGE(18) )
+		.add( newPERSON().NAME("Alice").AGE(23) )
+		.add( newPERSON().NAME("Charlie").LAST_NAME("Brown") )
+		.build()
 
 
 with this the code is type-safe and compact. And to make it really comfortable
